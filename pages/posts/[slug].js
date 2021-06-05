@@ -7,24 +7,26 @@ import markdownToHtml from "../../lib/markdownToHtml";
 export default function Post({ post, morePosts, preview }) {
   const router = useRouter();
   if (!router.isFallback && !post?.slug) {
-    {
-      console.log(post);
-    }
     return <ErrorPage statusCode={404} />;
   }
   return (
-    <div className="Layout">
-      {router.isFallback ? <p>loading...</p> : <article>post.title</article>}
+    <div className="px-4 font-mono Layout">
+      {router.isFallback ? (
+        <p>loading...</p>
+      ) : (
+        <article className="md:w-1/2">
+          {post.title}
+          <div dangerouslySetInnerHTML={{ __html: post.content }}></div>
+        </article>
+      )}
     </div>
   );
 }
 
 export async function getStaticProps({ params }) {
-  {console.log('getstaticshit');}
-  const post = getPostBySlug(params.slug, ["title"]);
+  const post = getPostBySlug(params.slug, ["title", "content", "slug"]);
 
   const content = await markdownToHtml(post.content || "");
-  console.log({ content, post });
   return {
     props: {
       post: {
@@ -37,10 +39,10 @@ export async function getStaticProps({ params }) {
 export async function getStaticPaths() {
   const posts = getAllPosts(["slug"]);
   return {
-    paths: paths.map((post) => {
+    paths: posts.map((post) => {
       return {
         params: {
-          slug: post.slug,
+          slug: post ? post.slug : "",
         },
       };
     }),
