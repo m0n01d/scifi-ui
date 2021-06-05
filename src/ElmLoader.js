@@ -8,7 +8,6 @@ class ElmLoader extends HTMLElement {
   }
   connectedCallback() {
     Elm.Replicant.init({node: this});
-    console.log('init')
 
 
 
