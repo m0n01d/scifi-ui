@@ -1,17 +1,10 @@
-import {Elm }from "./Replicant.elm";
-console.log({Elm})
-
 class ElmLoader extends HTMLElement {
-
   constructor() {
     super();
   }
   connectedCallback() {
-    Elm.Replicant.init({node: this});
-
-
-
+    const { Elm } = require("./Replicant.elm");
+    Elm.Replicant.init({ node: this });
   }
 }
-customElements.define('elm-replicant', ElmLoader, null);
-
+customElements.define("elm-replicant", ElmLoader, null);
