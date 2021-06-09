@@ -8,9 +8,13 @@
     "start": "next start"
   },
   "dependencies": {
+    "elm-webpack-loader": "^8.0.0",
+    "gray-matter": "^4.0.3",
     "next": "10.2.3",
     "react": "17.0.2",
-    "react-dom": "17.0.2"
+    "react-dom": "17.0.2",
+    "remark": "^13.0.0",
+    "remark-html": "^13.0.1"
   },
   "devDependencies": {
     "autoprefixer": "^10.2.6",
