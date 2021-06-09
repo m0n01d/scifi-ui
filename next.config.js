@@ -12,8 +12,9 @@ module.exports = {
           !isProd
             ? {
                 runtimeOptions: ["-A128M", "-H128M", "-n8m"],
+                debug: true,
               }
-            : { debug: true }
+            : {}
         ),
       },
     });
