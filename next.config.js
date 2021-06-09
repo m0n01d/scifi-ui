@@ -5,11 +5,12 @@ module.exports = {
       exclude: [/elm-stuff/, /node_modules/],
       use: {
         loader: "elm-webpack-loader",
-        options: {
-      runtimeOptions: ['-A128M', '-H128M', '-n8m']
-
-
-        },
+        options:
+          process.env.NODE_ENV !== "production"
+            ? {
+                runtimeOptions: ["-A128M", "-H128M", "-n8m"],
+              }
+            : {},
       },
     });
     return config;
