@@ -104,12 +104,23 @@ main : Html msg
 main =
     Html.div
         [ Attributes.style "width" "1024px"
-        , Attributes.class "mx-auto border"
+        , Attributes.class "mx-auto "
         ]
-        [ Html.img
-            [ Attributes.src "https://www.fillmurray.com/1024/768"
-            , Attributes.class "block w-1/2 ml-5"
+        [ Html.div
+            [ Attributes.class "border"
             ]
-            []
-        , viewNexusData ()
+            [ Html.img
+                [ Attributes.src "https://www.fillmurray.com/1024/768"
+                , Attributes.class "block w-1/2 ml-5"
+                ]
+                []
+            , viewNexusData ()
+            ]
+        , Html.p [ Attributes.class "ml-4" ]
+            [ Html.a
+                [ Attributes.href "/posts/replicant-cards"
+                , Attributes.class "text-blue-500"
+                ]
+                [ Html.text "read more" ]
+            ]
         ]
