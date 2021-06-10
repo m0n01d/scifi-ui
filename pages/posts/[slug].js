@@ -10,7 +10,7 @@ export default function Post({ post, morePosts, preview }) {
     return <ErrorPage statusCode={404} />;
   }
   return (
-    <div className="px-4 font-mono Layout">
+    <div className="from-markdown px-4 font-mono Layout">
       {router.isFallback ? (
         <p>loading...</p>
       ) : (

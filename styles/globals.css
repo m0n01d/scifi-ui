@@ -2,3 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
+
+
+.from-markdown  a {
+  @apply text-blue-500;
+
+}
