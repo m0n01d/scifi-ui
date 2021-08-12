@@ -167,7 +167,7 @@ viewNexusData android =
 view : Model -> Html Msg
 view model =
     Html.div
-        [ Attributes.style "width" "1024px"
+        [ Attributes.style "width" "1920px"
         , Attributes.class "mx-auto border"
         , Events.onClick CycleNextDroid
         ]
