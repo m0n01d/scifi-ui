@@ -4,6 +4,7 @@ import Browser
 import Html exposing (Html)
 import Html.Attributes as Attributes
 import Html.Events as Events
+import Json.Decode as Decode
 import Process
 import SelectList exposing (SelectList)
 import Task
@@ -11,7 +12,13 @@ import Task
 
 type alias Model =
     { androids : SelectList Android
+    , screen : ScreenState
     }
+
+
+type ScreenState
+    = Avatar
+    | Information
 
 
 type alias Android =
@@ -86,8 +93,8 @@ androids =
     [ roy, zhora, pris, leon ]
 
 
-viewNexusData : Android -> Html msg
-viewNexusData android =
+viewNexusData : Model -> Android -> Html Msg
+viewNexusData model android =
     let
         ( surname, maybeFirstName ) =
             name
@@ -95,14 +102,19 @@ viewNexusData android =
         { gender, name, id, inceptDate, func, phys, ment, picture } =
             android
     in
-    Html.div []
+    Html.div [ Attributes.class "flex flex-col " ]
         [ Html.img
             [ Attributes.src <| String.concat [ picture, "?id=", id ]
-            , Attributes.class "block w-1/2 ml-5"
+            , Attributes.classList
+                [ ( "flex-1 block ", True )
+                , ( "ml-5 w-1/2 transition-all", model.screen == Information )
+                , ( "w-full", model.screen == Avatar )
+                ]
+            , Events.on "transitionend" (Decode.succeed WaitAndCycleNextDroid)
             ]
             []
         , Html.div
-            [ Attributes.class "px-3 py-5 font-serif text-5xl border-t-4 border-black"
+            [ Attributes.class "flex-1 px-3 overflow-hidden font-serif text-5xl border-black opacity-100 xborder-t-4 xpy-5 bg-blue-50"
             ]
             [ Html.div [ Attributes.class "flex" ]
                 [ Html.div [ Attributes.class "mr-2" ]
@@ -167,22 +179,28 @@ viewNexusData android =
 view : Model -> Html Msg
 view model =
     Html.div
-        [ Attributes.style "width" "1920px"
-        , Attributes.class "mx-auto border"
-        , Events.onClick CycleNextDroid
+        [ Attributes.style "width" "1024px"
+        , Attributes.style "height" "768px"
+        , Attributes.class "mx-auto overflow-hidden border"
         ]
-        [ viewNexusData <| SelectList.selected model.androids
+        [ viewNexusData model <| SelectList.selected model.androids
         ]
 
 
 type Msg
     = CycleNextDroid
-    | NoOp
+    | CycleScreen
+    | WaitAndCycleNextDroid
 
 
 nextDroid =
     Process.sleep 3000
         |> Task.perform (always CycleNextDroid)
+
+
+nextScreen =
+    Process.sleep 3000
+        |> Task.perform (always CycleScreen)
 
 
 defaultAndroids =
@@ -192,31 +210,38 @@ defaultAndroids =
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
+        WaitAndCycleNextDroid ->
+            ( model, nextDroid )
+
         CycleNextDroid ->
             ( { model
-                | androids =
-                    if SelectList.selected model.androids == pris then
-                        defaultAndroids
-
-                    else
-                        SelectList.selectBy 1 model.androids
-                            |> Maybe.withDefault model.androids
+                | screen = Avatar
+                , androids =
+                    SelectList.selectBy 1 model.androids
+                        |> Maybe.withDefault defaultAndroids
               }
-            , nextDroid
+            , nextScreen
             )
 
-        _ ->
-            ( model, Cmd.none )
+        CycleScreen ->
+            ( { model
+                | screen =
+                    Information
+              }
+            , Cmd.none
+            )
 
 
 init : () -> ( Model, Cmd Msg )
-init flags =
+init _ =
     ( { androids = defaultAndroids
+      , screen = Avatar
       }
-    , nextDroid
+    , nextScreen
     )
 
 
+main : Program () Model Msg
 main =
     Browser.element
         { init = init
