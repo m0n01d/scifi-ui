@@ -107,7 +107,7 @@ viewNexusData model android =
             [ Attributes.src <| String.concat [ picture, "?id=", id ]
             , Attributes.classList
                 [ ( "flex-1 block ", True )
-                , ( "ml-5 w-1/2 transition-all", model.screen == Information )
+                , ( "w-1/2 transition-all", model.screen == Information )
                 , ( "w-full", model.screen == Avatar )
                 ]
             , Events.on "transitionend" (Decode.succeed WaitAndCycleNextDroid)
